@@ -37,13 +37,14 @@ func AddPerson(personSvc person.PersonSvcApi, logger *slog.Logger, v *customvali
 		}
 		person := domain.NewPerson(createPerson.Name, createPerson.Age, createPerson.Hobbies)
 		if _, err := personSvc.AddPerson(r.Context(), person); err != nil {
-			logger.Error(err.Error())
-			http.Error(w, "Unable to add person", http.StatusInternalServerError)
+			HandleError(err, w, logger)
 			return
 		}
-
+		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusCreated)
-		json.NewEncoder(w).Encode(dto.ConvertToJSONPerson(person))
+		if err := json.NewEncoder(w).Encode(dto.ConvertToJSONPerson(person)); err != nil {
+			HandleError(err, w, logger)
+		}
 	}
 }
 
@@ -71,9 +72,11 @@ func GetPersonByID(personSvc person.PersonSvcApi, logger *slog.Logger) http.Hand
 			HandleError(err, w, logger)
 			return
 		}
-
+		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(dto.ConvertToJSONPerson(person))
+		if err := json.NewEncoder(w).Encode(dto.ConvertToJSONPerson(person)); err != nil {
+			HandleError(err, w, logger)
+		}
 	}
 }
 
@@ -106,7 +109,9 @@ func GetPersons(personSvc person.PersonSvcApi, logger *slog.Logger) http.Handler
 
 		w.WriteHeader(http.StatusOK)
 		response := dto.ConvertToGetPersonsResponse(persons, metadata)
-		json.NewEncoder(w).Encode(response)
+		if err := json.NewEncoder(w).Encode(response); err != nil {
+			HandleError(err, w, logger)
+		}
 	}
 }
 
@@ -150,8 +155,11 @@ func UpdatePerson(personSvc person.PersonSvcApi, logger *slog.Logger, v *customv
 			return
 		}
 		response := dto.ConvertToJSONPerson(updatedPerson)
+		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(response)
+		if err := json.NewEncoder(w).Encode(response); err != nil {
+			HandleError(err, w, logger)
+		}
 	}
 }
 

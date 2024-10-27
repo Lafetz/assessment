@@ -23,10 +23,12 @@ func (v *CustomValidator) ValidateAndRespond(w http.ResponseWriter, input interf
 		if validationErrors, ok := err.(validator.ValidationErrors); ok {
 			errors := ValidateModel(validationErrors)
 			w.WriteHeader(http.StatusUnprocessableEntity)
-			json.NewEncoder(w).Encode(ValidationErrorResponse{
+			if err := json.NewEncoder(w).Encode(ValidationErrorResponse{
 				StatusCode: http.StatusUnprocessableEntity,
 				Errors:     errors,
-			})
+			}); err != nil {
+				http.Error(w, "internal server error", http.StatusInternalServerError)
+			}
 			return true
 		}
 	}

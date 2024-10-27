@@ -25,10 +25,10 @@ func TestAddPerson_AlreadyExists(t *testing.T) {
 	personID := uuid.New()
 	person := domain.Person{ID: personID, Name: "John Doe", Age: 30, Hobbies: []string{"Reading", "Swimming"}}
 
-	person, err := repo.AddPerson(context.Background(), person)
+	_, err := repo.AddPerson(context.Background(), person)
 	assert.NoError(t, err, "expected no error when adding a person")
 
-	person, err = repo.AddPerson(context.Background(), person)
+	_, err = repo.AddPerson(context.Background(), person)
 	assert.Equal(t, ErrDuplicatePk, err, "expected duplicate primary key error")
 }
 

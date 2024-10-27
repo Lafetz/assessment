@@ -34,6 +34,7 @@ func ParsePagination(r *http.Request) PaginationParams {
 		Page: page,
 	}
 }
+
 func HandleError(err error, w http.ResponseWriter, logger *slog.Logger) {
 
 	if err != nil {
@@ -58,8 +59,10 @@ type errorMessage struct {
 
 func writeError(w http.ResponseWriter, message string, statusCode int) {
 	w.WriteHeader(statusCode)
-	json.NewEncoder(w).Encode(errorMessage{
+	if err := json.NewEncoder(w).Encode(errorMessage{
 		StatusCode: statusCode,
 		Message:    message,
-	})
+	}); err != nil {
+		http.Error(w, "internal server error", http.StatusInternalServerError)
+	}
 }
