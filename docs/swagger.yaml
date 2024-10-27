@@ -1,3 +1,4 @@
+basePath: /api/v1
 definitions:
   domain.Person:
     properties:
@@ -30,7 +31,15 @@ definitions:
     - name
     type: object
 info:
-  contact: {}
+  contact:
+    name: my github
+    url: http://github.com/lafetz
+  description: crud api
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  title: Persons Api
+  version: "1.0"
 paths:
   /api/v1/persons:
     get:

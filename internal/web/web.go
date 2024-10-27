@@ -18,15 +18,15 @@ import (
 
 //	@title			Persons Api
 //	@version		1.0
-//	@description	assessment
+//	@description	crud api
 
-//	@contact.name	My API Support
+//	@contact.name	my github
 //	@contact.url	http://github.com/lafetz
 
 //	@license.name	MIT
 //	@license.url	https://opensource.org/licenses/MIT
 
-//	@BasePath	/api/v1
+// @BasePath	/api/v1
 type App struct {
 	port      int
 	router    *http.ServeMux

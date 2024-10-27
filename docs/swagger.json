@@ -1,8 +1,19 @@
 {
     "swagger": "2.0",
     "info": {
-        "contact": {}
+        "description": "crud api",
+        "title": "Persons Api",
+        "contact": {
+            "name": "my github",
+            "url": "http://github.com/lafetz"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        },
+        "version": "1.0"
     },
+    "basePath": "/api/v1",
     "paths": {
         "/api/v1/persons": {
             "get": {
