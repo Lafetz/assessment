@@ -13,7 +13,7 @@ import (
 func TestAddPerson(t *testing.T) {
 	repo := NewRepository()
 	person := domain.NewPerson("John D", 30, []string{"Reading", "Swimming"})
-	err := repo.AddPerson(context.Background(), person)
+	person, err := repo.AddPerson(context.Background(), person)
 	assert.NoError(t, err, "expected no error when adding a person")
 
 	_, err = repo.GetPerson(context.Background(), person.ID)
@@ -25,10 +25,10 @@ func TestAddPerson_AlreadyExists(t *testing.T) {
 	personID := uuid.New()
 	person := domain.Person{ID: personID, Name: "John Doe", Age: 30, Hobbies: []string{"Reading", "Swimming"}}
 
-	err := repo.AddPerson(context.Background(), person)
+	person, err := repo.AddPerson(context.Background(), person)
 	assert.NoError(t, err, "expected no error when adding a person")
 
-	err = repo.AddPerson(context.Background(), person)
+	person, err = repo.AddPerson(context.Background(), person)
 	assert.Equal(t, ErrDuplicatePk, err, "expected duplicate primary key error")
 }
 
@@ -37,7 +37,7 @@ func TestGetPerson(t *testing.T) {
 	personID := uuid.New()
 	person := domain.Person{ID: personID, Name: "Jane Doe", Age: 25, Hobbies: []string{"Cycling"}}
 
-	err := repo.AddPerson(context.Background(), person)
+	person, err := repo.AddPerson(context.Background(), person)
 	assert.NoError(t, err, "expected no error when adding a person")
 
 	retrievedPerson, err := repo.GetPerson(context.Background(), personID)
@@ -58,11 +58,11 @@ func TestUpdatePerson(t *testing.T) {
 	personID := uuid.New()
 	person := domain.Person{ID: personID, Name: "Alice", Age: 28, Hobbies: []string{"Traveling"}}
 
-	err := repo.AddPerson(context.Background(), person)
+	person, err := repo.AddPerson(context.Background(), person)
 	assert.NoError(t, err, "expected no error when adding a person")
 
 	person.Age = 29
-	err = repo.UpdatePerson(context.Background(), person)
+	person, err = repo.UpdatePerson(context.Background(), person)
 	assert.NoError(t, err, "expected no error when updating a person")
 
 	updatedPerson, err := repo.GetPerson(context.Background(), personID)
@@ -75,7 +75,7 @@ func TestUpdatePerson_NotFound(t *testing.T) {
 	personID := uuid.New()
 	p := domain.Person{ID: personID, Name: "Charlie", Age: 32, Hobbies: []string{"Gaming"}}
 
-	err := repo.UpdatePerson(context.Background(), p)
+	_, err := repo.UpdatePerson(context.Background(), p)
 	assert.Error(t, err, person.ErrNotFound, "expected error when updating a non-existent person")
 }
 
@@ -84,7 +84,7 @@ func TestDeletePerson(t *testing.T) {
 	personID := uuid.New()
 	p := domain.Person{ID: personID, Name: "Bob", Age: 40, Hobbies: []string{"Cooking"}}
 
-	err := repo.AddPerson(context.Background(), p)
+	_, err := repo.AddPerson(context.Background(), p)
 	assert.NoError(t, err, "expected no error when adding a person")
 
 	err = repo.DeletePerson(context.Background(), personID)
@@ -113,7 +113,7 @@ func TestGetPersons(t *testing.T) {
 	}
 
 	for _, person := range persons {
-		err := repo.AddPerson(context.Background(), person)
+		_, err := repo.AddPerson(context.Background(), person)
 		assert.NoError(t, err, "expected no error when adding a person")
 	}
 

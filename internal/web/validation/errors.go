@@ -19,7 +19,6 @@ func ValidateModel(err validator.ValidationErrors) map[string]string {
 }
 
 func errorMsgs(tag string, value string) string {
-	print(tag, value)
 	switch tag {
 	case "required":
 		return "This field is required"

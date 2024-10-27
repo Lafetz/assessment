@@ -25,16 +25,16 @@ func NewRepository() *Repository {
 	}
 }
 
-func (r *Repository) AddPerson(ctx context.Context, person domain.Person) error {
+func (r *Repository) AddPerson(ctx context.Context, person domain.Person) (domain.Person, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
 	if _, exists := r.storage[person.ID]; exists {
-		return ErrDuplicatePk
+		return domain.Person{}, ErrDuplicatePk
 	}
 
 	r.storage[person.ID] = person
-	return nil
+	return domain.Person{}, nil
 }
 
 func (r *Repository) GetPerson(ctx context.Context, id uuid.UUID) (domain.Person, error) {
@@ -85,14 +85,14 @@ func (r *Repository) DeletePerson(ctx context.Context, id uuid.UUID) error {
 	return nil
 }
 
-func (r *Repository) UpdatePerson(ctx context.Context, p domain.Person) error {
+func (r *Repository) UpdatePerson(ctx context.Context, p domain.Person) (domain.Person, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
 	if _, exists := r.storage[p.ID]; !exists {
-		return person.ErrNotFound
+		return domain.Person{}, person.ErrNotFound
 	}
 
 	r.storage[p.ID] = p
-	return nil
+	return p, nil
 }

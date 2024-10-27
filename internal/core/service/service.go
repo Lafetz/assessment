@@ -11,8 +11,8 @@ type PersonSvc struct {
 	repo repository
 }
 
-func NewPersonSvc(repo repository) PersonSvc {
-	return PersonSvc{
+func NewPersonSvc(repo repository) *PersonSvc {
+	return &PersonSvc{
 		repo: repo,
 	}
 }

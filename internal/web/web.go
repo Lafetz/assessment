@@ -16,6 +16,17 @@ import (
 	customvalidator "github.com/lafetz/assessment/internal/web/validation"
 )
 
+//	@title			Persons Api
+//	@version		1.0
+//	@description	assessment
+
+//	@contact.name	My API Support
+//	@contact.url	http://github.com/lafetz
+
+//	@license.name	MIT
+//	@license.url	https://opensource.org/licenses/MIT
+
+//	@BasePath	/api/v1
 type App struct {
 	port      int
 	router    *http.ServeMux
