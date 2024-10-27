@@ -17,7 +17,7 @@ func NewPersonSvc(repo repository) PersonSvc {
 	}
 }
 
-func (s *PersonSvc) AddPerson(ctx context.Context, person domain.Person) error {
+func (s *PersonSvc) AddPerson(ctx context.Context, person domain.Person) (domain.Person, error) {
 	return s.repo.AddPerson(ctx, person)
 }
 
@@ -33,6 +33,6 @@ func (s *PersonSvc) DeletePerson(ctx context.Context, id uuid.UUID) error {
 	return s.repo.DeletePerson(ctx, id)
 }
 
-func (s *PersonSvc) UpdatePerson(ctx context.Context, person domain.Person) error {
+func (s *PersonSvc) UpdatePerson(ctx context.Context, person domain.Person) (domain.Person, error) {
 	return s.repo.UpdatePerson(ctx, person)
 }

@@ -8,9 +8,16 @@ import (
 )
 
 type repository interface {
-	AddPerson(ctx context.Context, person domain.Person) error
+	AddPerson(ctx context.Context, person domain.Person) (domain.Person, error)
 	GetPerson(ctx context.Context, id uuid.UUID) (domain.Person, error)
 	GetPersons(ctx context.Context, page, size int32) ([]domain.Person, domain.Metadata, error)
 	DeletePerson(ctx context.Context, id uuid.UUID) error
-	UpdatePerson(ctx context.Context, person domain.Person) error
+	UpdatePerson(ctx context.Context, person domain.Person) (domain.Person, error)
+}
+type PersonSvcApi interface {
+	AddPerson(ctx context.Context, person domain.Person) (domain.Person, error)
+	GetPerson(ctx context.Context, id uuid.UUID) (domain.Person, error)
+	GetPersons(ctx context.Context, page, size int32) ([]domain.Person, domain.Metadata, error)
+	DeletePerson(ctx context.Context, id uuid.UUID) error
+	UpdatePerson(ctx context.Context, person domain.Person) (domain.Person, error)
 }
