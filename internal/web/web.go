@@ -29,7 +29,7 @@ import (
 // @BasePath	/api/v1
 type App struct {
 	port      int
-	router    *http.ServeMux
+	Router    *http.ServeMux
 	logger    *slog.Logger
 	PersonSvc person.PersonSvcApi
 	validate  *customvalidator.CustomValidator
@@ -37,7 +37,7 @@ type App struct {
 
 func NewApp(port int, logger *slog.Logger, personSvc person.PersonSvcApi, validate *customvalidator.CustomValidator) *App {
 	a := &App{
-		router:    http.NewServeMux(),
+		Router:    http.NewServeMux(),
 		logger:    logger,
 		port:      port,
 		PersonSvc: personSvc,
@@ -50,7 +50,7 @@ func (a *App) Run() error {
 
 	srv := &http.Server{
 		Addr:         fmt.Sprintf(":%s", strconv.Itoa(a.port)),
-		Handler:      a.router,
+		Handler:      a.Router,
 		IdleTimeout:  time.Minute,
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 30 * time.Second,

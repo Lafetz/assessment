@@ -24,6 +24,7 @@ import (
 //	@Param			person	body		dto.CreatePerson	true	"Person data"
 //	@Success		201		{object}	domain.Person
 //	@Failure		400		{object}	string	"Invalid input"
+//	@Failure		422		{object}	customvalidator.ValidationErrorResponse		"Validation failed"
 //	@Router			/api/v1/persons [post]
 func AddPerson(personSvc person.PersonSvcApi, logger *slog.Logger, v *customvalidator.CustomValidator) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -83,11 +84,14 @@ func GetPersonByID(personSvc person.PersonSvcApi, logger *slog.Logger) http.Hand
 // GetPersons godoc
 //
 //	@Summary		Get all persons
-//	@Description	Retrieve a list of persons
+//	@Description	Retrieve a list of persons with pagination support
 //	@Tags			Persons
 //	@Accept			json
 //	@Produce		json
-//	@Success		200	{array}	domain.Person
+//	@Param			page	query	int		false	"Page number"	default(0)
+//	@Param			size	query	int		false	"Page size"		default(10)
+//	@Success		200		{object}		dto.GetPersonsResponse
+//	@Failure		500		{string}	string	"intrnal server error"
 //	@Router			/api/v1/persons [get]
 func GetPersons(personSvc person.PersonSvcApi, logger *slog.Logger) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -103,7 +107,7 @@ func GetPersons(personSvc person.PersonSvcApi, logger *slog.Logger) http.Handler
 		persons, metadata, err := personSvc.GetPersons(r.Context(), int32(page), int32(size))
 		if err != nil {
 			logger.Error(err.Error())
-			http.Error(w, "Unable to get persons", http.StatusInternalServerError)
+			http.Error(w, "intrnal server error", http.StatusInternalServerError)
 			return
 		}
 
@@ -116,7 +120,6 @@ func GetPersons(personSvc person.PersonSvcApi, logger *slog.Logger) http.Handler
 }
 
 // UpdatePerson godoc
-
 // @Summary		Update an existing person
 // @Description	Update a person by their ID
 // @Tags			Persons
@@ -127,6 +130,7 @@ func GetPersons(personSvc person.PersonSvcApi, logger *slog.Logger) http.Handler
 // @Success		200			{object}	domain.Person
 // @Failure		404			{object}	string	"Person not found"
 // @Failure		400			{object}	string	"Invalid input"
+// @Failure		422		{object}	customvalidator.ValidationErrorResponse		"Validation failed"
 // @Router			/api/v1/persons/{personId} [put]
 func UpdatePerson(personSvc person.PersonSvcApi, logger *slog.Logger, v *customvalidator.CustomValidator) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -186,6 +190,6 @@ func DeletePerson(personSvc person.PersonSvcApi, logger *slog.Logger) http.Handl
 			HandleError(err, w, logger)
 			return
 		}
-		w.WriteHeader(http.StatusOK)
+		w.WriteHeader(http.StatusNoContent)
 	}
 }

@@ -22,18 +22,10 @@ func errorMsgs(tag string, value string) string {
 	switch tag {
 	case "required":
 		return "This field is required"
-	case "email":
-		return "Invalid email"
 	case "lte":
 		return "can not be greater than " + value
 	case "gte":
 		return "can not be less than " + value
-	case "min":
-		return "can not be less than " + value
-	case "len":
-		return "length invalid"
-	case "oneof":
-		return "sort value must be one of: " + value
 	}
 	return ""
 }

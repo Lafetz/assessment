@@ -9,14 +9,7 @@ const docTemplate = `{
     "info": {
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
-        "contact": {
-            "name": "my github",
-            "url": "http://github.com/lafetz"
-        },
-        "license": {
-            "name": "MIT",
-            "url": "https://opensource.org/licenses/MIT"
-        },
+        "contact": {},
         "version": "{{.Version}}"
     },
     "host": "{{.Host}}",
@@ -24,7 +17,7 @@ const docTemplate = `{
     "paths": {
         "/api/v1/persons": {
             "get": {
-                "description": "Retrieve a list of persons",
+                "description": "Retrieve a list of persons with pagination support",
                 "consumes": [
                     "application/json"
                 ],
@@ -35,14 +28,33 @@ const docTemplate = `{
                     "Persons"
                 ],
                 "summary": "Get all persons",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 0,
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 10,
+                        "description": "Page size",
+                        "name": "size",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/domain.Person"
-                            }
+                            "$ref": "#/definitions/dto.GetPersonsResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "intrnal server error",
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 }
@@ -81,6 +93,12 @@ const docTemplate = `{
                         "description": "Invalid input",
                         "schema": {
                             "type": "string"
+                        }
+                    },
+                    "422": {
+                        "description": "Validation failed",
+                        "schema": {
+                            "$ref": "#/definitions/customvalidator.ValidationErrorResponse"
                         }
                     }
                 }
@@ -171,6 +189,12 @@ const docTemplate = `{
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    "422": {
+                        "description": "Validation failed",
+                        "schema": {
+                            "$ref": "#/definitions/customvalidator.ValidationErrorResponse"
+                        }
                     }
                 }
             },
@@ -210,6 +234,15 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "customvalidator.ValidationErrorResponse": {
+            "type": "object",
+            "properties": {
+                "errors": {},
+                "statusCode": {
+                    "type": "integer"
+                }
+            }
+        },
         "domain.Person": {
             "type": "object",
             "properties": {
@@ -253,18 +286,72 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        },
+        "dto.GetPersonsResponse": {
+            "type": "object",
+            "properties": {
+                "meta": {
+                    "$ref": "#/definitions/dto.JSONMetadata"
+                },
+                "persons": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.JSONPerson"
+                    }
+                }
+            }
+        },
+        "dto.JSONMetadata": {
+            "type": "object",
+            "properties": {
+                "currentPage": {
+                    "type": "integer"
+                },
+                "firstPage": {
+                    "type": "integer"
+                },
+                "lastPage": {
+                    "type": "integer"
+                },
+                "pageSize": {
+                    "type": "integer"
+                },
+                "totalRecords": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dto.JSONPerson": {
+            "type": "object",
+            "properties": {
+                "age": {
+                    "type": "integer"
+                },
+                "hobbies": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
         }
     }
 }`
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "1.0",
+	Version:          "",
 	Host:             "",
-	BasePath:         "/api/v1",
+	BasePath:         "",
 	Schemes:          []string{},
-	Title:            "Persons Api",
-	Description:      "crud api",
+	Title:            "",
+	Description:      "",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

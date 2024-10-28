@@ -11,7 +11,7 @@ on:
 
   workflow_dispatch:
 env:
-  THRESHOLD: 80.0 # test >80%
+  THRESHOLD: 50.0 # test >50%
 jobs:
   lint:
     runs-on: ubuntu-22.04

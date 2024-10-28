@@ -1,5 +1,10 @@
-basePath: /api/v1
 definitions:
+  customvalidator.ValidationErrorResponse:
+    properties:
+      errors: {}
+      statusCode:
+        type: integer
+    type: object
   domain.Person:
     properties:
       age:
@@ -30,31 +35,71 @@ definitions:
     - hobbies
     - name
     type: object
+  dto.GetPersonsResponse:
+    properties:
+      meta:
+        $ref: '#/definitions/dto.JSONMetadata'
+      persons:
+        items:
+          $ref: '#/definitions/dto.JSONPerson'
+        type: array
+    type: object
+  dto.JSONMetadata:
+    properties:
+      currentPage:
+        type: integer
+      firstPage:
+        type: integer
+      lastPage:
+        type: integer
+      pageSize:
+        type: integer
+      totalRecords:
+        type: integer
+    type: object
+  dto.JSONPerson:
+    properties:
+      age:
+        type: integer
+      hobbies:
+        items:
+          type: string
+        type: array
+      id:
+        type: string
+      name:
+        type: string
+    type: object
 info:
-  contact:
-    name: my github
-    url: http://github.com/lafetz
-  description: crud api
-  license:
-    name: MIT
-    url: https://opensource.org/licenses/MIT
-  title: Persons Api
-  version: "1.0"
+  contact: {}
 paths:
   /api/v1/persons:
     get:
       consumes:
       - application/json
-      description: Retrieve a list of persons
+      description: Retrieve a list of persons with pagination support
+      parameters:
+      - default: 0
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Page size
+        in: query
+        name: size
+        type: integer
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/domain.Person'
-            type: array
+            $ref: '#/definitions/dto.GetPersonsResponse'
+        "500":
+          description: intrnal server error
+          schema:
+            type: string
       summary: Get all persons
       tags:
       - Persons
@@ -80,6 +125,10 @@ paths:
           description: Invalid input
           schema:
             type: string
+        "422":
+          description: Validation failed
+          schema:
+            $ref: '#/definitions/customvalidator.ValidationErrorResponse'
       summary: Add a new person
       tags:
       - Persons
@@ -161,6 +210,10 @@ paths:
           description: Person not found
           schema:
             type: string
+        "422":
+          description: Validation failed
+          schema:
+            $ref: '#/definitions/customvalidator.ValidationErrorResponse'
       summary: Update an existing person
       tags:
       - Persons

@@ -34,7 +34,7 @@ func (r *Repository) AddPerson(ctx context.Context, person domain.Person) (domai
 	}
 
 	r.storage[person.ID] = person
-	return domain.Person{}, nil
+	return person, nil
 }
 
 func (r *Repository) GetPerson(ctx context.Context, id uuid.UUID) (domain.Person, error) {

@@ -194,7 +194,7 @@ func TestDeletePerson(t *testing.T) {
 
 	handler.ServeHTTP(w, req)
 
-	if w.Code != http.StatusOK {
-		t.Errorf("Expected status code %d, got %d", http.StatusOK, w.Code)
+	if w.Code != http.StatusNoContent {
+		t.Errorf("Expected status code %d, got %d", http.StatusNoContent, w.Code)
 	}
 }

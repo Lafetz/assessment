@@ -24,15 +24,3 @@ func (app *App) recoverPanic(next http.Handler) http.HandlerFunc {
 		next.ServeHTTP(w, r)
 	}
 }
-
-// func (app *App) cors(next http.Handler) http.Handler {
-// 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-// 		w.Header().Set("Vary", "Origin")
-
-// 		w.Header().Set("Vary", "Access-Control-Request-Method")
-// 		origin := r.Header.Get("Origin")
-
-// 		next.ServeHTTP(w, r)
-// 	})
-// }
