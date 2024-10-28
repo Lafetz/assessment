@@ -11,6 +11,7 @@ RUN go mod verify
 
 COPY ./internal ./internal
 COPY ./cmd ./cmd
+COPY ./docs ./docs
 
 RUN go build -o ./bin/web ./cmd
 
