@@ -31,14 +31,20 @@ Access the Swagger UI at /swagger/index.html.
 Run Tests:
 
  ```sh
-    go test ./... -v
+    make test
+ ```
+
+Coverage:
+
+ ```sh
+   make coverage 
  ```
 
 ### Without Docker
 
 Clone the Repository:
 
-Install Dependencies: Make sure you have Go installed and set up. Then, install any required dependencies:
+Install Dependencies: Make sure you have Go and make installed and set up. Then, install any required dependencies:
 
 ```sh
 go mod tidy
@@ -49,10 +55,8 @@ Run the Application:
 
 ```sh
 
-go run main.go
+make run
 
 ```
 
-```sh
-go test ./... -v
-```
+
